@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>💰 Loan Calculator Pro</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #fff;
+      }
+      .navbar {
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+      }
+      .navbar-brand {
+        font-weight: 700;
+        background: linear-gradient(90deg, #22d3ee, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.6rem;
+      }
+      .container-box {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(20px);
+        padding: 40px;
+        max-width: 800px;
+        margin: 50px auto;
+      }
+      label {
+        color: #93c5fd;
+        font-weight: 600;
+      }
+      .form-control {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        padding: 10px;
+      }
+      .form-control:focus {
+        border-color: #38bdf8;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #22d3ee);
+        border: none;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 10px 25px;
+        border-radius: 15px;
+        transition: all 0.3s;
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(34, 211, 238, 0.5);
+      }
+      .btn-outline-secondary {
+        color: #e2e8f0;
+        border: 1px solid #64748b;
+        font-weight: 600;
+        border-radius: 15px;
+        transition: 0.3s;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .btn-outline-secondary:hover {
+        background: linear-gradient(135deg, #6366f1, #22d3ee);
+        color: #fff;
+        border: none;
+        transform: translateY(-3px);
+      }
+      .result-box {
+        background: linear-gradient(90deg, #0ea5e9, #6366f1);
+        color: #fff;
+        border-radius: 15px;
+        padding: 25px;
+        font-size: 1.3rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        margin-top: 25px;
+        transition: 0.3s;
+      }
+      .result-box:hover {
+        transform: scale(1.02);
+      }
+      .result-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 10px;
+      }
+      footer {
+        text-align: center;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.9);
+        color: #cbd5e1;
+        font-size: 1rem;
+        margin-top: auto;
+      }
+      @media (max-width: 600px) {
+        .container-box {
+          padding: 25px;
+          font-size: 1rem;
+        }
+        .btn-primary {
+          width: 100%;
+        }
+      }
+      /* Modal Styling */
+      .modal-content {
+        background: linear-gradient(145deg, #0f172a, #1e293b);
+        color: #e2e8f0;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+      }
+      .modal-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .modal-title {
+        background: linear-gradient(90deg, #22d3ee, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+      }
+      .modal-body h3 {
+        color: #93c5fd;
+      }
+      .step {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark px-4">
+      <a class="navbar-brand" href="#">💰 Loan Calculator Pro</a>
+    </nav>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end p-2">
+      <button
+        class="btn btn-primary me-md-2"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#guideModal"
+      >
+        Use To Tool
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#helpModal"
+      >
+        Help
+      </button>
+    </div>
+
+    <div class="container-box">
+      <h2 class="text-center mb-4">लोन कैलकुलेटर</h2>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="principal">लोन राशि (₹)</label>
+          <input
+            type="number"
+            id="principal"
+            class="form-control"
+            placeholder="जैसे: 500000"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="rate">ब्याज दर (%) प्रति वर्ष</label>
+          <input
+            type="number"
+            id="rate"
+            class="form-control"
+            placeholder="जैसे: 8.5"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="time">समय अवधि (साल)</label>
+          <input
+            type="number"
+            id="time"
+            class="form-control"
+            placeholder="जैसे: 5"
+          />
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button class="btn btn-primary" onclick="calculateLoan()">
+          Calculate
+        </button>
+      </div>
+
+      <div id="output" style="display: none" class="result-box">
+        <div class="result-value" id="emi"></div>
+        <div class="result-value" id="totalInterest"></div>
+        <div class="result-value" id="totalPayment"></div>
+        <canvas id="loanChart" style="margin-top: 20px"></canvas>
+      </div>
+    </div>
+
+    <!-- 🪟 Guide Modal -->
+    <div class="modal fade" id="guideModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-3">
+          <div class="modal-header">
+            <h5 class="modal-title">📘 Loan Calculator Guide</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="step">
+              <h3>1️⃣ लोन राशि दर्ज करें</h3>
+              <p>
+                जिस राशि का लोन लेना चाहते हैं, उसे ₹ में लिखें। उदाहरण: 30000
+              </p>
+            </div>
+            <div class="step">
+              <h3>2️⃣ ब्याज दर (%) डालें</h3>
+              <p>
+                आपके लोन पर सालाना ब्याज दर (Annual Interest Rate) दर्ज करें,
+                जैसे 10%।
+              </p>
+            </div>
+            <div class="step">
+              <h3>3️⃣ समय अवधि (Years)</h3>
+              <p>
+                कितने सालों में लोन चुकाना है, उसे भरें — जैसे 2, 3 या 5 साल।
+              </p>
+            </div>
+            <div class="step">
+              <h3>4️⃣ Calculate पर क्लिक करें</h3>
+              <p>
+                अब "Calculate" बटन दबाएं — सिस्टम EMI, कुल ब्याज और कुल भुगतान
+                दिखा देगा।
+              </p>
+            </div>
+            <div class="step">
+              <h3>5️⃣ ग्राफ देखें 🎯</h3>
+              <p>
+                Chart आपको दिखाएगा कि कुल राशि में से Principal और Interest का
+                प्रतिशत कितना है।
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🆘 Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content p-3">
+          <div class="modal-header">
+            <h5 class="modal-title">🆘 Loan Calculator Help</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              यह टूल आपको लोन की EMI, कुल ब्याज और कुल भुगतान का अनुमान लगाने
+              में मदद करता है।
+            </p>
+            <ul>
+              <li>
+                📌 ऊपर दी गई फ़ील्ड्स में Loan Amount, Interest Rate और Loan
+                Tenure भरें।
+              </li>
+              <li>🧮 “Calculate” पर क्लिक करें — तुरंत परिणाम मिलेगा।</li>
+              <li>
+                📊 नीचे Pie Chart में Principal और Interest का वितरण दिखेगा।
+              </li>
+              <li>💡 सटीक EMI आपके बैंक की वास्तविक दरों पर निर्भर करती है।</li>
+            </ul>
+            <p class="text-info mt-3">
+              ⚠️ ध्यान दें: यह केवल अनुमानित कैलकुलेशन है।
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>© 2025 | Designed with ❤️ by You | Loan Calculator</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let chart;
+      function formatCurrency(num) {
+        return "₹ " + num.toLocaleString("en-IN", { maximumFractionDigits: 2 });
+      }
+      function calculateLoan() {
+        const P = parseFloat(document.getElementById("principal").value);
+        const R = parseFloat(document.getElementById("rate").value);
+        const T = parseFloat(document.getElementById("time").value);
+        if (isNaN(P) || isNaN(R) || isNaN(T)) return;
+        const r = R / 12 / 100;
+        const n = T * 12;
+        const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+        const totalPayment = emi * n;
+        const totalInterest = totalPayment - P;
+        document.getElementById("emi").innerText = `मासिक EMI: ${formatCurrency(
+          emi
+        )}`;
+        document.getElementById(
+          "totalInterest"
+        ).innerText = `कुल ब्याज: ${formatCurrency(totalInterest)}`;
+        document.getElementById(
+          "totalPayment"
+        ).innerText = `कुल भुगतान: ${formatCurrency(totalPayment)}`;
+        document.getElementById("output").style.display = "block";
+        const ctx = document.getElementById("loanChart").getContext("2d");
+        if (chart) chart.destroy();
+        chart = new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: ["Principal", "Interest"],
+            datasets: [
+              {
+                data: [P, totalInterest],
+                backgroundColor: ["#22d3ee", "#6366f1"],
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              legend: { labels: { color: "#fff", font: { size: 14 } } },
+              tooltip: {
+                callbacks: {
+                  label: function (c) {
+                    return c.label + ": " + formatCurrency(c.raw);
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
