@@ -167,101 +167,154 @@
     </div>
 
     <div class="container-box">
-      <h2 class="text-center mb-4">लोन कैलकुलेटर</h2>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <label for="principal">लोन राशि (₹)</label>
-          <input
-            type="number"
-            id="principal"
-            class="form-control"
-            placeholder="जैसे: 500000"
-          />
-        </div>
-        <div class="col-md-4">
-          <label for="rate">ब्याज दर (%) प्रति वर्ष</label>
-          <input
-            type="number"
-            id="rate"
-            class="form-control"
-            placeholder="जैसे: 8.5"
-          />
-        </div>
-        <div class="col-md-4">
-          <label for="time">समय अवधि (साल)</label>
-          <input
-            type="number"
-            id="time"
-            class="form-control"
-            placeholder="जैसे: 5"
-          />
-        </div>
-      </div>
+<h1 class="text-center mb-4">💰 Loan Interest Calculator</h1>
 
-      <div class="text-center mt-4">
-        <button class="btn btn-primary" onclick="calculateLoan()">
-          Calculate
-        </button>
-      </div>
+<div class="row g-3">
+  <div class="col-md-4">
+    <label>कितना पैसा लिया (₹)</label>
+    <input type="number" class="form-control" id="principal" value="10000">
+  </div>
+  <div class="col-md-4">
+    <label>कितने महीने हुए</label>
+    <input type="number" class="form-control" id="months" value="10">
+  </div>
+  <div class="col-md-4">
+    <label>कितने महीने भुगतान नहीं किया</label>
+    <input type="number" class="form-control" id="missedMonths" value="0">
+  </div>
+  <div class="col-md-4">
+    <label>Interest per ₹100 per month (₹)</label>
+    <input type="number" class="form-control" id="interestPer100" value="5">
+  </div>
+  <div class="col-md-4">
+    <label>मासिक भुगतान (₹)</label>
+    <input type="number" class="form-control" id="monthlyPayment" value="100">
+  </div>
+  <div class="col-md-4 d-flex align-items-end">
+    <button class="btn btn-primary w-100" onclick="calculateLoan()">Calculate</button>
+  </div>
+</div>
 
-      <div id="output" style="display: none" class="result-box">
-        <div class="result-value" id="emi"></div>
-        <div class="result-value" id="totalInterest"></div>
-        <div class="result-value" id="totalPayment"></div>
-        <canvas id="loanChart" style="margin-top: 20px"></canvas>
+<hr class="my-4 text-light">
+
+<div id="result" style="display:none;">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="result-box">
+        <h5>कुल ब्याज (Total Interest)</h5>
+        <p id="totalInterest" class="fs-5"></p>
+      </div>
+      <div class="result-box" style="background:linear-gradient(90deg,#16a34a,#22c55e);">
+        <h5>कुल भुगतान (Paid Amount)</h5>
+        <p id="totalPaid" class="fs-5"></p>
+      </div>
+      <div class="result-box" style="background:linear-gradient(90deg,#f97316,#f59e0b);">
+        <h5>बाकी राशि (Remaining)</h5>
+        <p id="balance" class="fs-5"></p>
+      </div>
+      <div class="result-box" style="background:linear-gradient(90deg,#dc2626,#ef4444);">
+        <h5>Total Due</h5>
+        <p id="totalDue" class="fs-5"></p>
       </div>
     </div>
+
+    <div class="col-md-6">
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+</div>
+</div>
+
 
     <!-- 🪟 Guide Modal -->
-    <div class="modal fade" id="guideModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content p-3">
-          <div class="modal-header">
-            <h5 class="modal-title">📘 Loan Calculator Guide</h5>
-            <button
-              type="button"
-              class="btn-close btn-close-white"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="step">
-              <h3>1️⃣ लोन राशि दर्ज करें</h3>
-              <p>
-                जिस राशि का लोन लेना चाहते हैं, उसे ₹ में लिखें। उदाहरण: 30000
-              </p>
-            </div>
-            <div class="step">
-              <h3>2️⃣ ब्याज दर (%) डालें</h3>
-              <p>
-                आपके लोन पर सालाना ब्याज दर (Annual Interest Rate) दर्ज करें,
-                जैसे 10%।
-              </p>
-            </div>
-            <div class="step">
-              <h3>3️⃣ समय अवधि (Years)</h3>
-              <p>
-                कितने सालों में लोन चुकाना है, उसे भरें — जैसे 2, 3 या 5 साल।
-              </p>
-            </div>
-            <div class="step">
-              <h3>4️⃣ Calculate पर क्लिक करें</h3>
-              <p>
-                अब "Calculate" बटन दबाएं — सिस्टम EMI, कुल ब्याज और कुल भुगतान
-                दिखा देगा।
-              </p>
-            </div>
-            <div class="step">
-              <h3>5️⃣ ग्राफ देखें 🎯</h3>
-              <p>
-                Chart आपको दिखाएगा कि कुल राशि में से Principal और Interest का
-                प्रतिशत कितना है।
-              </p>
-            </div>
-          </div>
+<div class="modal fade" id="guideModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content p-3">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">📘 Loan Interest Calculator – उपयोग गाइड</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="step mb-3">
+          <h5>1️⃣ कितना पैसा लिया (₹)</h5>
+          <p>
+            यहाँ वह राशि दर्ज करें जो आपने लोन के रूप में ली है।  
+            <br><strong>उदाहरण:</strong> 10000, 25000
+          </p>
         </div>
+
+        <div class="step mb-3">
+          <h5>2️⃣ कितने महीने हुए</h5>
+          <p>
+            लोन लिए हुए कुल कितने महीने हो चुके हैं, वह संख्या भरें।  
+            <br><strong>उदाहरण:</strong> 6, 10, 24
+          </p>
+        </div>
+
+        <div class="step mb-3">
+          <h5>3️⃣ कितने महीने भुगतान नहीं किया</h5>
+          <p>
+            अगर आपने कुछ महीनों से भुगतान नहीं किया है तो यहाँ वह संख्या डालें।  
+            <br>अगर सभी भुगतान हो चुके हैं तो <strong>0</strong> लिखें।
+          </p>
+        </div>
+
+        <div class="step mb-3">
+          <h5>4️⃣ Interest per ₹100 per month</h5>
+          <p>
+            यह मासिक ब्याज दर है जो हर ₹100 पर लगती है।  
+            <br><strong>उदाहरण:</strong> ₹100 पर ₹5 ब्याज → 5
+          </p>
+        </div>
+
+        <div class="step mb-3">
+          <h5>5️⃣ मासिक भुगतान (₹)</h5>
+          <p>
+            आप हर महीने लोन में कितनी राशि जमा कर रहे हैं, वह यहाँ लिखें।  
+            <br><strong>उदाहरण:</strong> 500, 1000
+          </p>
+        </div>
+
+        <div class="step mb-3">
+          <h5>6️⃣ Calculate बटन दबाएँ</h5>
+          <p>
+            सभी जानकारी भरने के बाद <strong>Calculate</strong> बटन पर क्लिक करें।  
+            सिस्टम तुरंत नीचे सभी परिणाम दिखा देगा।
+          </p>
+        </div>
+
+        <hr>
+
+        <div class="step mb-3">
+          <h5>📊 Calculator क्या दिखाता है?</h5>
+          <ul>
+            <li><strong>कुल ब्याज (Total Interest)</strong> – अब तक का कुल ब्याज</li>
+            <li><strong>कुल भुगतान (Paid Amount)</strong> – अब तक चुकाई गई राशि</li>
+            <li><strong>बाकी राशि (Remaining)</strong> – अभी कितना देना बाकी है</li>
+            <li><strong>Total Due</strong> – कुल देय राशि</li>
+          </ul>
+        </div>
+
+        <div class="step">
+          <h5>📈 Pie Chart</h5>
+          <p>
+            ग्राफ में आपको अलग-अलग रंगों में दिखेगा:
+            <br>🔵 Principal (मूलधन)
+            <br>🟣 Interest (ब्याज)
+            <br>🟢 Paid (भुगतान की गई राशि)
+          </p>
+        </div>
+
       </div>
     </div>
+  </div>
+</div>
 
     <!-- 🆘 Help Modal -->
     <div class="modal fade" id="helpModal" tabindex="-1">
@@ -303,57 +356,52 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      let chart;
-      function formatCurrency(num) {
-        return "₹ " + num.toLocaleString("en-IN", { maximumFractionDigits: 2 });
-      }
-      function calculateLoan() {
-        const P = parseFloat(document.getElementById("principal").value);
-        const R = parseFloat(document.getElementById("rate").value);
-        const T = parseFloat(document.getElementById("time").value);
-        if (isNaN(P) || isNaN(R) || isNaN(T)) return;
-        const r = R / 12 / 100;
-        const n = T * 12;
-        const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-        const totalPayment = emi * n;
-        const totalInterest = totalPayment - P;
-        document.getElementById("emi").innerText = `मासिक EMI: ${formatCurrency(
-          emi
-        )}`;
-        document.getElementById(
-          "totalInterest"
-        ).innerText = `कुल ब्याज: ${formatCurrency(totalInterest)}`;
-        document.getElementById(
-          "totalPayment"
-        ).innerText = `कुल भुगतान: ${formatCurrency(totalPayment)}`;
-        document.getElementById("output").style.display = "block";
-        const ctx = document.getElementById("loanChart").getContext("2d");
-        if (chart) chart.destroy();
-        chart = new Chart(ctx, {
-          type: "pie",
-          data: {
-            labels: ["Principal", "Interest"],
-            datasets: [
-              {
-                data: [P, totalInterest],
-                backgroundColor: ["#22d3ee", "#6366f1"],
-              },
-            ],
-          },
-          options: {
-            plugins: {
-              legend: { labels: { color: "#fff", font: { size: 14 } } },
-              tooltip: {
-                callbacks: {
-                  label: function (c) {
-                    return c.label + ": " + formatCurrency(c.raw);
-                  },
-                },
-              },
-            },
-          },
-        });
-      }
-    </script>
+function fmt(n){ return '₹ ' + Number(n).toLocaleString('en-IN', {maximumFractionDigits:2}); }
+
+function calculateLoan(){
+  const P = parseFloat(document.getElementById("principal").value);
+  const months = parseInt(document.getElementById("months").value);
+  const missed = parseInt(document.getElementById("missedMonths").value);
+  const intPer100 = parseFloat(document.getElementById("interestPer100").value);
+  const monthlyPay = parseFloat(document.getElementById("monthlyPayment").value);
+
+  const rate = intPer100/100;
+
+  // Total interest = P * rate * months
+  const totalInterest = P * rate * months;
+
+  // Paid amount = monthly payment * (months - missed)
+  const totalPaid = monthlyPay * (months - missed);
+
+  // Remaining
+  const remaining = (P + totalInterest) - totalPaid;
+
+  // Total due if missed months
+  const totalDue = P + totalInterest;
+
+  document.getElementById("totalInterest").innerText = fmt(totalInterest);
+  document.getElementById("totalPaid").innerText = fmt(totalPaid);
+  document.getElementById("balance").innerText = fmt(remaining);
+  document.getElementById("totalDue").innerText = fmt(totalDue);
+
+  document.getElementById("result").style.display = 'block';
+
+  // Pie chart showing Principal, Interest, Paid, Remaining
+  const ctx = document.getElementById("chart");
+  if(window.myChart) window.myChart.destroy();
+  window.myChart = new Chart(ctx,{
+    type:'pie',
+    data:{
+      labels:['Principal','Interest','Paid'],
+      datasets:[{
+        data:[P,totalInterest,totalPaid],
+        backgroundColor:['#38bdf8','#818cf8','#22c55e']
+      }]
+    },
+    options:{plugins:{legend:{labels:{color:'#e2e8f0'}}}}
+  });
+}
+</script>
   </body>
 </html>
+
